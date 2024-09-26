@@ -76,7 +76,9 @@ In the writeup, describe which type of candidate sponsored the most promoting ad
 ```{r}
 party_incumbent_promote <- fb_ads |>
   group_by(party, incumbency) |>
+  filter(office == "State Senate" | office == "State House") |>
   summarize(promote_prop = mean(ad_tone_promote, na.rm = T))
+  
 knitr::kable(party_incumbent_promote, digits = 3, col.names = c("Party Affiliation", "Incumbency Status", "Promotional Ad Average"))
 ```
 
@@ -95,7 +97,20 @@ Create a histogram of this variable for just the US House races. Save the ggplot
 
 ## Answer 3
 
+```{r}
+fb_ads <- fb_ads |>
+  mutate(impressions_millions = impressions/1000000)
+library(ggplot2)
+plot_q3 <- ggplot(data = fb_ads,
+       mapping = aes(x = impressions_millions),
+       filter(office == "State House")) +
+  geom_histogram() +
+  xlim(0, 15) +
+  ylim(0, 1500)
+plot_q3
+```
 
+This histogram has a large spike on the left and quickly declines, and most candidates did not have more than 10 million ad impressions on facebook.
 
 \newpage
 
